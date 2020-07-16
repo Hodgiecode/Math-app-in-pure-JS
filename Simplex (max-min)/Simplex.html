@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Симплекс-метод</title>
+<script type="text/javascript"></script> 
+<script src="simplex.js"></script>
+<script>
+function brush(){
+	document.getElementById('place').innerHTML=""
+}
+
+function createtask(){
+	var mode=document.getElementById('mode').options[document.getElementById('mode').selectedIndex].value;
+	var n=document.getElementById('n').value
+	var m=document.getElementById('m').value
+	var str=""
+	
+	if (mode=="Минимум"){
+		mode="min"
+		var par=0
+	}
+	
+	if (mode=="Максимум"){
+		mode="max"
+		var par=1
+	}
+	
+	if (isNaN(n) || n==""){
+		document.getElementById('place').innerHTML+="<br>Ошибка в поле ввода числа переменных !<br>"
+		return -1
+	}
+	
+	if (isNaN(m) || m==""){
+		document.getElementById('place').innerHTML+="<br>Ошибка в поле ввода числа ограничений !<br>"
+		return -1
+	}
+	
+	for (var i=0;i<n;i++){
+		str=str+'<input type="text" size="1px" id="x_'+String(i+1)+'"><input type="text" style="visibility:hidden" size="1px">'
+	}
+	
+	str="<br>"+str+"-><input type='text' style='visibility:hidden' size='1px'>"+mode+"<br><br>"
+	
+	for (var i=0;i<m;i++){
+		for (var j=0;j<n;j++){
+			str=str+'<input type="text" size="1px" id="y_'+String(i+1)+"."+String(j+1)+'"><input type="text" style="visibility:hidden" size="1px">'
+		}
+		
+		if (mode=="min"){
+			str=str+"=><input type='text' style='visibility:hidden' size='1px'><input type='text' size='1px' id='b_"+String(i+1)+"'>"
+		}
+		
+		if (mode=="max"){
+			str=str+"<=<input type='text' style='visibility:hidden' size='1px'><input type='text' size='1px' id='b_"+String(i+1)+"'>"
+		}
+		
+		str=str+"<br><br>"
+	}
+	
+	str=str+"<input type='button' id='solve_task' value='Решить задачу' onclick='solvetask("+String(n)+","+String(m)+","+String(par)+")'>"
+	str=str+"<input type='text' style='visibility:hidden' size='1px'><input type='button' id='clean_task' value='Очистка' onclick='brush()'>"
+	
+	document.getElementById('place').innerHTML+=str
+}
+
+function solvetask(n,m,mode){
+	if (mode==0){
+		var str="min\n"+String(m)+" "+String(n)+"\n"
+	}
+	
+	if (mode==1){
+		var str="max\n"+String(m)+" "+String(n)+"\n"
+	}
+	
+	for (var i=0;i<n;i++){
+		var val0=document.getElementById("x_"+String(i+1)).value
+		if (val0=="" || isNaN(val0)){
+			document.getElementById('place').innerHTML+="<br>Ошибка в целевой функции !<br>"
+			return -1
+		}
+		
+		if (i==0){
+			str=str+val0
+		} else {
+			str=str+" "+val0
+		}
+	}
+	
+	str=str+"\n"
+	
+	for (var i=0;i<m;i++){
+		for (var j=0;j<n;j++){
+			var val1=document.getElementById("y_"+String(i+1)+"."+String(j+1)).value
+			
+			if (val1=="" || isNaN(val1)){
+				document.getElementById('place').innerHTML+="<br>Ошибка в ограничениях: ячейка "+String(i+1)+"."+String(j+1)+" !<br>"
+				return -1
+			}
+			
+			if (j==0){
+				str=str+val1
+			} else {
+				str=str+" "+val1
+			}
+		}
+		
+		var val2=document.getElementById("b_"+String(i+1)).value
+		if (val2=="" || isNaN(val2)){
+			document.getElementById('place').innerHTML+="<br>Ошибка в ограничениях !<br>"
+			return -1
+		}
+		
+		str=str+" "+val2+"\n"
+	}
+	
+	var result=pretty_write_simplex(str)
+	document.getElementById('place').innerHTML+="<br>"+result+"<br>"
+}
+
+</script>
+</head>
+<body>
+Количество переменных: <input type="text" size="1px" id="n"><input type="text" style="visibility:hidden" size="1px">
+Количество ограничений: <input type="text" size="1px" id="m"><input type="text" style="visibility:hidden" size="1px">
+Максимум/минимум: <select id="mode">
+<option>Максимум</option>
+<option>Минимум</option>
+</select>
+<input type="text" style="visibility:hidden" size="1px">
+<input type="button" id="create_task" value="Создать задачу" onclick="createtask()">
+<div id="place"></div>
+</body>
+</html>

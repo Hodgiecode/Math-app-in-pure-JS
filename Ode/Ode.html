@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Дифференциальные уравнения</title>
+<script type="text/javascript"></script> 
+<script src="ode.js"></script>
+<script>
+function brush(){
+	document.getElementById('place').innerHTML=""
+}
+
+function createtask(){
+	var mode=document.getElementById('mode').options[document.getElementById('mode').selectedIndex].value;
+	var str=""
+	var par=0
+	if (mode=="y'=f(x,y)"){
+		par=1
+		str=str+'<br><br>f(x,y) <input type="text" size="6px" id="f"><input type="text" style="visibility:hidden" size="1px">'+
+			'a <input type="text" size="3px" id="a"><input type="text" style="visibility:hidden" size="1px">'+
+			'b <input type="text" size="3px" id="b"><input type="text" style="visibility:hidden" size="1px">'+
+			'y(a) <input type="text" size="3px" id="ya"><input type="text" style="visibility:hidden" size="1px">'+
+			'n <input type="text" size="3px" id="n"><input type="text" style="visibility:hidden" size="1px">'+
+			'<br><br>Проверочная функция (опция) <input type="text" size="8px" id="dp"><input type="text" style="visibility:hidden" size="1px"><br>'
+	}
+	
+	if (mode=="y''+y'*p(x)+y*q(x)=f(x)"){
+		par=2
+		str=str+'<br><br>p(x) <input type="text" size="6px" id="px"><input type="text" style="visibility:hidden" size="1px">'+
+			'q(x) <input type="text" size="6px" id="qx"><input type="text" style="visibility:hidden" size="1px">'+
+			'f(x) <input type="text" size="6px" id="fx"><input type="text" style="visibility:hidden" size="1px">'+
+			'a <input type="text" size="3px" id="a"><input type="text" style="visibility:hidden" size="1px">'+
+			'b <input type="text" size="3px" id="b"><input type="text" style="visibility:hidden" size="1px">'+
+			'y(a) <input type="text" size="3px" id="ya"><input type="text" style="visibility:hidden" size="1px">'+
+			'y(b) <input type="text" size="3px" id="yb"><input type="text" style="visibility:hidden" size="1px">'+
+			'n <input type="text" size="3px" id="n"><input type="text" style="visibility:hidden" size="1px">'+
+			'<br><br>Проверочная функция (опция) <input type="text" size="8px" id="dp"><input type="text" style="visibility:hidden" size="1px"><br>'
+	}
+	
+	str=str+"<br><br><input type='button' id='solve_task' value='Решить задачу' onclick='solvetask("+String(par)+")'>"
+	str=str+"<input type='text' style='visibility:hidden' size='1px'><input type='button' id='clean_task' value='Очистка' onclick='brush()'>"
+	
+	document.getElementById('place').innerHTML+=str
+}
+
+function solvetask(mode){
+	if (mode==1){
+		var func=document.getElementById('f').value
+		var a=document.getElementById('a').value
+		var b=document.getElementById('b').value
+		var ya=document.getElementById('ya').value
+		var n=document.getElementById('n').value
+		var dp=document.getElementById('dp').value
+		var result=solveode1(func,a,b,n,ya,dp)
+	}
+	
+	if (mode==2){
+		var px=document.getElementById('px').value
+		var qx=document.getElementById('qx').value
+		var fx=document.getElementById('fx').value
+		
+		var a=document.getElementById('a').value
+		var b=document.getElementById('b').value
+		var ya=document.getElementById('ya').value
+		var yb=document.getElementById('yb').value
+		
+		var n=document.getElementById('n').value
+		var dp=document.getElementById('dp').value
+		
+		var result=solveode2(fx,px,qx,a,b,n,ya,yb,dp)
+	}
+	
+	
+	document.getElementById('place').innerHTML+="<br>"+result+"<br>"
+}
+
+</script>
+</head>
+<body>
+<select id="mode">
+<option>y'=f(x,y)</option>
+<option>y''+y'*p(x)+y*q(x)=f(x)</option>
+</select>
+<input type="text" style="visibility:hidden" size="1px">
+<input type="button" id="create_task" value="Создать задачу" onclick="createtask()">
+<div id="place"></div>
+</body>
+</html>

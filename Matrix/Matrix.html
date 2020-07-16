@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Матрицы</title>
+<script type="text/javascript"></script> 
+<script src="matrix.js"></script>
+<script src="eigen.js"></script>
+<script src="lss.js"></script>
+<script>
+function brush(){
+	document.getElementById('place').innerHTML=""
+}
+
+function createtask(){
+	var mode=document.getElementById('mode').options[document.getElementById('mode').selectedIndex].value;
+
+	var n=document.getElementById('n1').value
+	var m=document.getElementById('m1').value
+	var str="<br>"
+	var lst=["Ранг матрицы","Обратная матрица","Определитель","Собст.значения и вектора","Умножение матриц","Решение СЛАУ (методом Гаусса)"]
+	
+	for (var i=0;i<lst.length;i++){
+		if (mode==lst[i]){
+			var par=i
+			break
+		}
+	}
+	
+	if (isNaN(n) || n==""){
+		document.getElementById('place').innerHTML+="<br>Ошибка в поле n1 !<br>"
+		return -1
+	}
+	
+	if (isNaN(m) || m==""){
+		document.getElementById('place').innerHTML+="<br>Ошибка в поле m1 !<br>"
+		return -1
+	}
+	
+	for (var i=0;i<n;i++){
+		for (var j=0;j<m;j++){
+			str=str+'<input type="text" size="1px" id="y_'+String(i+1)+"."+String(j+1)+'"><input type="text" style="visibility:hidden" size="1px">'
+		}
+		
+		if (mode=="Решение СЛАУ (методом Гаусса)"){
+			str=str+'=<input type="text" style="visibility:hidden" size="1px"><input type="text" size="1px" id="y_'+String(i+1)+"."+String(j+1)+'"><input type="text" style="visibility:hidden" size="1px">'
+		}
+		
+		str=str+"<br><br>"
+	}
+	
+	if (mode=="Умножение матриц"){
+		var n2=document.getElementById('n2').value
+		var m2=document.getElementById('m2').value
+		
+		if (isNaN(n2) || n2==""){
+			document.getElementById('place').innerHTML+="<br>Ошибка в поле n2 !<br>"
+			return -1
+		}
+	
+		if (isNaN(m2) || m2==""){
+			document.getElementById('place').innerHTML+="<br>Ошибка в поле m2 !<br>"
+			return -1
+		}
+	
+		str=str+"-------------<br><br>"
+		for (var i=0;i<n2;i++){
+			for (var j=0;j<m2;j++){
+				str=str+'<input type="text" size="1px" id="z_'+String(i+1)+"."+String(j+1)+'"><input type="text" style="visibility:hidden" size="1px">'
+			}
+		
+			str=str+"<br><br>"
+		}
+	}
+	
+
+	str=str+"<input type='button' id='solve_task' value='Решить задачу' onclick='solvetask("+String(n)+","+String(m)+","+String(par)+")'>"
+	str=str+"<input type='text' style='visibility:hidden' size='1px'><input type='button' id='clean_task' value='Очистка' onclick='brush()'>"
+	
+	document.getElementById('place').innerHTML+=str
+}
+
+function solvetask(n,m,mode){
+	var str=""
+	var A_=[]
+	var A=[]
+	var B_=[]
+	var B=[]
+	var p=m
+	
+	if (mode==5){
+		p=p+1
+	}
+	
+	for (var i=0;i<n;i++){
+		for (var j=0;j<p;j++){
+			var val1=document.getElementById("y_"+String(i+1)+"."+String(j+1)).value
+			
+			if (val1=="" || isNaN(val1)){
+				document.getElementById('place').innerHTML+="<br>Ошибка : ячейка "+String(i+1)+"."+String(j+1)+" !<br>"
+				return -1
+			}
+			
+			A_.push(parseFloat(val1))
+		}
+		
+		A.push(A_)
+		A_=[]
+	}
+	
+	document.getElementById('place').innerHTML+="<br>"
+	
+	for (var i=0;i<n;i++){
+		for (var j=0;j<m;j++){
+			document.getElementById('place').innerHTML+=" "+A[i][j]
+		}
+		document.getElementById('place').innerHTML+="<br>"
+	}
+	
+	if (mode==4){
+		var n2=parseInt(document.getElementById('n2').value)
+		var m2=parseInt(document.getElementById('m2').value)
+		
+		if (n!=m2){
+			document.getElementById('place').innerHTML+="Size error: n1!=m2<br>"
+			return -1
+		}
+		
+		for (var i=0;i<n2;i++){
+		for (var j=0;j<m2;j++){
+			B_.push(parseFloat(val1))
+		}
+		
+			B.push(B_)
+			B_=[]
+		}
+		
+		document.getElementById('place').innerHTML+="<br>"
+		for (var i=0;i<n2;i++){
+			for (var j=0;j<m2;j++){
+				document.getElementById('place').innerHTML+=" "+B[i][j]
+			}
+			document.getElementById('place').innerHTML+="<br>"
+		}
+		
+		var C=multiply(A,B)
+		document.getElementById('place').innerHTML+="<br>"
+		
+		for (var i=0;i<n2;i++){
+			for (var j=0;j<m2;j++){
+				document.getElementById('place').innerHTML+=" "+C[i][j]
+			}
+			document.getElementById('place').innerHTML+="<br>"
+		}
+		
+		var result=""
+	}
+	
+	if (mode==0){
+		var result=rank(parseInt(n),parseInt(m),A)
+	}
+	
+	if (mode==1){
+		var result=inverse_matrix(A,parseInt(n))
+	}
+	
+	if (mode==2){
+		var str=[]
+		var ans=determinant_matrix(A,parseInt(n),str)
+		var result=ans[0]
+		if (ans[1]!=[]){
+			for (var i=0;i<ans[1].length;i++){
+				document.getElementById('place').innerHTML+="<br>"+ans[1][i]
+			}
+		}
+	}
+	
+	if (mode==3){
+		var result,str=eigen(A,parseInt(n))
+		document.getElementById('place').innerHTML+="<br>"+str+"<br>"
+	}
+	
+	if (mode==5){
+		var C=[]
+		var X=new Array()
+		var tmp=new Array()
+		
+		for (var i=0;i<n;i++){
+			var temp=new Array()
+			for (var j=0;j<m;j++){
+				tmp.push(temp)
+			}
+		}
+		
+		for (var i=0;i<n;i++){
+			C.push(A[i][m])
+		}
+		
+		var result=system(A,C,X,tmp,n)
+		
+	}
+	
+	if (result!=undefined && result!=""){
+		document.getElementById('place').innerHTML+="<br>"+result+"<br>"
+	}
+}
+
+</script>
+</head>
+<body>
+n1: <input type="text" size="1px" id="n1"><input type="text" style="visibility:hidden" size="1px">
+m1: <input type="text" size="1px" id="m1"><input type="text" style="visibility:hidden" size="1px">
+n2: <input type="text" size="1px" id="n2"><input type="text" style="visibility:hidden" size="1px">
+m2: <input type="text" size="1px" id="m2"><input type="text" style="visibility:hidden" size="1px">
+Операция: <select id="mode">
+<option>Ранг матрицы</option>
+<option>Обратная матрица</option>
+<option>Определитель</option>
+<option>Собст.значения и вектора</option>
+<option>Умножение матриц</option>
+<option>Решение СЛАУ (методом Гаусса)</option>
+</select>
+<input type="text" style="visibility:hidden" size="1px">
+<input type="button" id="create_task" value="Создать задачу" onclick="createtask()">
+<div id="place"></div>
+</body>
+</html>
