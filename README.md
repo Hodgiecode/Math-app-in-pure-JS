@@ -15,3 +15,7 @@ Use Math.cos, Math.sin, Math.abs and etc for function call
 ##### Diff
 
 Zhegalkin polynomial,definite integral simpson's rule calculator, interpolation and extrapolation (linear, https://www.geeksforgeeks.org/program-to-implement-linear-extrapolation/)
+
+##### Calc
+
+Roots of polynomial (numeric), Taylor's Series, Indefinite and Definite integral, derivatives. Use https://github.com/davidedc/Algebrite (old verison) converted to pure Javascript and math.js https://github.com/josdejong/mathjs
