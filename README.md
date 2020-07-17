@@ -12,9 +12,15 @@ Problems with eigenvectors. Solution can be incorrect
 
 Use Math.cos, Math.sin, Math.abs and etc for function call
 
+##### Roots
+
+For not polynomial use Math.cos, Math.sin, Math.abs and etc for function call and left and right bound must have different signs
+
 ##### Diff
 
 Zhegalkin polynomial,definite integral simpson's rule calculator, interpolation and extrapolation (linear, https://www.geeksforgeeks.org/program-to-implement-linear-extrapolation/)
+
+Use Math.cos, Math.sin, Math.abs and etc for function call in definite integral simpson's rule calculator
 
 ##### Calc
 
