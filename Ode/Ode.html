@@ -37,6 +37,20 @@ function createtask(){
 			'<br><br>Проверочная функция (опция) <input type="text" size="8px" id="dp"><input type="text" style="visibility:hidden" size="1px"><br>'
 	}
 	
+	if (mode=="Система ДУ из трех неизвестных"){
+		par=3
+		str=str+'<br><br>F_1 <input type="text" size="6px" id="fx"><input type="text" style="visibility:hidden" size="1px">'+
+			'F_2 <input type="text" size="6px" id="fy"><input type="text" style="visibility:hidden" size="1px">'+
+			'F_3 <input type="text" size="6px" id="fz"><input type="text" style="visibility:hidden" size="1px"><br><br>'+
+			'n <input type="text" size="6px" id="n"><input type="text" style="visibility:hidden" size="1px">'+
+			'a <input type="text" size="6px" id="a"><input type="text" style="visibility:hidden" size="1px">'+
+			'b <input type="text" size="6px" id="b"><input type="text" style="visibility:hidden" size="1px">'+
+			'x0 <input type="text" size="6px" id="x0"><input type="text" style="visibility:hidden" size="1px">'+
+			'y0 <input type="text" size="6px" id="y0"><input type="text" style="visibility:hidden" size="1px">'+
+			'z0 <input type="text" size="6px" id="z0"><input type="text" style="visibility:hidden" size="1px">'+
+			'Printed Id <input type="text" size="6px" id="pi"><input type="text" style="visibility:hidden" size="1px">'
+	}
+	
 	str=str+"<br><br><input type='button' id='solve_task' value='Решить задачу' onclick='solvetask("+String(par)+")'>"
 	str=str+"<input type='text' style='visibility:hidden' size='1px'><input type='button' id='clean_task' value='Очистка' onclick='brush()'>"
 	
@@ -70,6 +84,22 @@ function solvetask(mode){
 		var result=solveode2(fx,px,qx,a,b,n,ya,yb,dp)
 	}
 	
+	if (mode==3){
+		var fx=document.getElementById('fx').value
+		var fy=document.getElementById('fy').value
+		var fz=document.getElementById('fz').value
+		
+		var n=document.getElementById('n').value
+		var a=document.getElementById('a').value
+		var b=document.getElementById('b').value
+		
+		var x0=document.getElementById('x0').value
+		var y0=document.getElementById('y0').value
+		var z0=document.getElementById('z0').value
+		
+		var pi=document.getElementById('pi').value
+		var result=Runge_Kutta_for_system(fx,fy,fz,n,a,b,x0,y0,z0,pi)
+	}
 	
 	document.getElementById('place').innerHTML+="<br>"+result+"<br>"
 }
@@ -80,6 +110,7 @@ function solvetask(mode){
 <select id="mode">
 <option>y'=f(x,y)</option>
 <option>y''+y'*p(x)+y*q(x)=f(x)</option>
+<option>Система ДУ из трех неизвестных</option>
 </select>
 <input type="text" style="visibility:hidden" size="1px">
 <input type="button" id="create_task" value="Создать задачу" onclick="createtask()">

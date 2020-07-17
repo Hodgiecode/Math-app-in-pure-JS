@@ -198,3 +198,77 @@ function solveode2(func,p,q,a,b,n,y_a,y_b,check_ode){
   	
   	return str
  }
+ 
+ 
+function calculat(func,x,y,z){
+	var val=eval(func);
+	return val;
+}
+
+function Runge_Kutta_for_system(f_x,f_y,f_z,n,a,b,x,y,z,amount){
+	var n, t0, x, y, z, h, t;
+	var str="";
+	if (a.indexOf(".")+1){
+     		a=parseFloat(a);
+     	} else {
+     		a=parseInt(a);
+    }
+
+    if (b.indexOf(".")+1){
+     	b=parseFloat(b);
+     } else {
+     	b=parseInt(b);
+     }
+
+     if (x.indexOf(".")+1){
+     		x=parseFloat(x);
+     	} else {
+     		x=parseInt(x);
+     	}
+
+     	if (y.indexOf(".")+1){
+     		y=parseFloat(y);
+     	} else {
+     		y=parseInt(y);
+     	}
+
+     	if (z.indexOf(".")+1){
+     		z=parseFloat(z);
+     	} else {
+     		z=parseInt(z);
+     	}
+	
+	h=(b-a)/n;
+	
+	str="t x(t) y(t) z(t) <br>"
+	str=str+a+"  "+x+"  "+y+"  "+z+"  "+"<br>";
+    var i=0;
+	
+	while (a < b){
+		var k1 = h*calculat(f_x,x, y, z);
+		var m1 = h*calculat(f_y,x, y, z);
+		var n1 = h*calculat(f_z,x, y, z);
+		var k2 = h*calculat(f_x,x + k1 / 2, y + m1 / 2, z + n1 / 2);
+		var m2 = h*calculat(f_y,x + k1 / 2, y + m1 / 2, z + n1 / 2);
+		var n2 = h*calculat(f_z,x + k1 / 2, y + m1 / 2, z + n1 / 2);
+		var k3 = h*calculat(f_x,x + k2 / 2, y + m2 / 2, z + n2 / 2);
+		var m3 = h*calculat(f_y,x + k2 / 2, y + m2 / 2, z + n2 / 2);
+		var n3 = h*calculat(f_z,x + k2 / 2, y + m2 / 2, z + n2 / 2);
+		var k4 = h*calculat(f_x,x + k3, y + m3, z + n3);
+		var m4 = h*calculat(f_y,x + k3, y + m3, z + n3);
+		var n4 = h*calculat(f_z,x + k3, y + m3, z + n3);
+
+		x += (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+		y += (m1 + 2 * m2 + 2 * m3 + m4) / 6;
+		z += (n1 + 2 * n2 + 2 * n3 + n4) / 6;
+
+		a += h;
+        if (i%amount==0 || i==n-1){
+          str=str+a.toFixed(4)+" | "+x.toFixed(4)+" | "+y.toFixed(4)+" | "+z.toFixed(4)+"  "+"<br>";
+        }
+      
+        i=i+1;
+	}
+
+	return str;
+}

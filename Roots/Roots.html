@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Корни многочленов</title>
+<script type="text/javascript"></script> 
+<script src="roots.js"></script>
+<script>
+function brush(){
+	document.getElementById('place').innerHTML=""
+}
+
+function createtask(){
+	var mode=document.getElementById('mode').options[document.getElementById('mode').selectedIndex].value;
+	var str=""
+	var par=0
+	if (mode=="A*x^2+B*x+C=0"){
+		par=1
+		str=str+'<br><br>A <input type="text" size="10px" id="a"><input type="text" style="visibility:hidden" size="1px">'+
+			'B <input type="text" size="10px" id="b"><input type="text" style="visibility:hidden" size="1px">'+
+			'C <input type="text" size="10px" id="c"><input type="text" style="visibility:hidden" size="1px">'
+	}
+	
+	if (mode=="A*x^3+B*x^2+C*x+D=0"){
+		par=2
+		str=str+'<br><br>A <input type="text" size="10px" id="a"><input type="text" style="visibility:hidden" size="1px">'+
+			'B <input type="text" size="10px" id="b"><input type="text" style="visibility:hidden" size="1px">'+
+			'C <input type="text" size="10px" id="c"><input type="text" style="visibility:hidden" size="1px">'+
+			'D <input type="text" size="10px" id="d"><input type="text" style="visibility:hidden" size="1px">'
+	}
+	
+	if (mode=="Корни функции"){
+		par=3
+		str=str+'<br><br>Функция <input type="text" size="10px" id="f"><input type="text" style="visibility:hidden" size="1px">'+
+			'a <input type="text" size="10px" id="a"><input type="text" style="visibility:hidden" size="1px">'+
+			'b <input type="text" size="10px" id="b"><input type="text" style="visibility:hidden" size="1px">'+
+			'Шаг <input type="text" size="10px" id="step"><input type="text" style="visibility:hidden" size="1px">'
+	}
+	
+	str=str+"<br><br><input type='button' id='solve_task' value='Решить задачу' onclick='solvetask("+String(par)+")'>"
+	str=str+"<input type='text' style='visibility:hidden' size='1px'><input type='button' id='clean_task' value='Очистка' onclick='brush()'>"
+	
+	document.getElementById('place').innerHTML+=str
+}
+
+function solvetask(mode){
+	if (mode==1){
+		var a=document.getElementById('a').value
+		var b=document.getElementById('b').value
+		var c=document.getElementById('c').value
+	
+		var result=root2(a,b,c)
+	}
+	
+	if (mode==2){
+		var a=document.getElementById('a').value
+		var b=document.getElementById('b').value
+		var c=document.getElementById('c').value
+		var d=document.getElementById('d').value
+	
+		var result=root3(a,b,c,d)
+	}
+	
+	if (mode==3){
+		var a=document.getElementById('a').value
+		var b=document.getElementById('b').value
+		var f=document.getElementById('f').value
+		var step=document.getElementById('step').value
+		
+		var result=printRoots(f, a, b, step)
+	}
+	
+	document.getElementById('place').innerHTML+="<br>"+result+"<br>"
+}
+
+</script>
+</head>
+<body>
+<select id="mode">
+<option>A*x^2+B*x+C=0</option>
+<option>A*x^3+B*x^2+C*x+D=0</option>
+<option>Корни функции</option>
+</select>
+<input type="text" style="visibility:hidden" size="1px">
+<input type="button" id="create_task" value="Создать задачу" onclick="createtask()">
+<div id="place"></div>
+</body>
+</html>
