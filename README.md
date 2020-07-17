@@ -18,4 +18,4 @@ Zhegalkin polynomial,definite integral simpson's rule calculator, interpolation 
 
 ##### Calc
 
-Roots of polynomial (numeric), Taylor's Series, Indefinite and Definite integral, derivatives. Use https://github.com/davidedc/Algebrite (old verison) converted to pure Javascript and math.js https://github.com/josdejong/mathjs
+Roots of polynomial (numeric), Taylor's Series, Indefinite and Definite integral, derivatives. Use https://github.com/davidedc/Algebrite (old verson) converted to pure Javascript and math.js https://github.com/josdejong/mathjs
