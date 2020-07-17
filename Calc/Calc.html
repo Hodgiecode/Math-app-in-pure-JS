@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Пример использования algebrite</title>
+<script type="text/javascript"></script> 
+<script src="calc.js"></script>
+<script src="math.js"></script>
+<script>
+
+function derval(param){
+  if (param=='1'){
+    var funct=document.getElementById('func').value;
+    var poryadok=document.getElementById('por').value;
+  
+    if (isNaN(parseInt(poryadok))){
+	  poryadok=1;
+	}
+		
+	if (funct!=''){ //
+	   for (var i=0;i<poryadok;i++){
+	      funct=math.derivative(funct,'x');
+		  document.getElementById('comment').innerHTML+='Значение '+(i+1).toString()+'-й производной равно '+funct+'\n'
+	   }   
+	}
+	
+	if (document.getElementById('dot').value=='pi'){
+      var dot_value=3.14; 
+	} else {
+	  var dot_value=parseInt(document.getElementById('dot').value);
+	}
+	if (!isNaN(dot_value)){
+	      document.getElementById('comment').innerHTML+='Значение функции в точке равно '+funct.eval({x:dot_value})+'\n'
+	}
+ }
+ 
+ if (param=='2'){
+    var funct=document.getElementById('func2').value;
+	var poryadok=document.getElementById('por').value;
+  
+    if (isNaN(parseInt(poryadok))){
+	  poryadok=1;
+	}
+	
+    if (funct!=''){ //
+	      var poryadok=document.getElementById('por2').value;
+		for (var i=0;i<poryadok;i++){
+	      funct=math.derivative(funct,'x');
+		  document.getElementById('comment').innerHTML+='Значение '+(i+1).toString()+'-й частной производной по x равно '+funct+'\n'
+	    }
+ 
+		var funkr_x=funct;
+		var funct=document.getElementById('func2').value;
+		
+		for (var i=0;i<poryadok;i++){
+	      funct=math.derivative(funct,'y');
+		  document.getElementById('comment').innerHTML+='Значение '+(i+1).toString()+'-й частной производной по y равно '+funct+'\n'
+	    }
+		  
+		var funkr_y=funct;
+		
+		var funct=document.getElementById('func2').value;
+		funct=math.derivative(funct,'x');
+		funct=math.derivative(funct,'y');
+		var funkr_xy=funct;
+		
+		var funct=document.getElementById('func2').value;
+		funct=math.derivative(funct,'y');
+		funct=math.derivative(funct,'x');
+		  
+		document.getElementById('comment').innerHTML+='Значение смешанной производной по xy равно '+funkr_xy+'\n'
+		funct=math.derivative(funct,'y');
+		document.getElementById('comment').innerHTML+='Значение смешанной производной по yx равно '+funct+'\n'
+		
+		if (document.getElementById('dot2').value=='pi'){
+			var dot_value=3.14; 
+		} else {
+		var dot_value=parseInt(document.getElementById('dot2').value);
+	    }
+		
+		if (document.getElementById('second_dot2').value=='pi'){
+			var dot_value2=3.14; 
+		} else {
+		var dot_value2=parseInt(document.getElementById('second_dot2').value);
+	    }
+		
+		if (!isNaN(dot_value) && !isNaN(dot_value2)){
+	      document.getElementById('comment').innerHTML+='Значение '+poryadok.toString() +'-производной по x в точке равно '+funkr_x.eval({x:dot_value,y:dot_value2})+'\n'
+		  document.getElementById('comment').innerHTML+='Значение '+poryadok.toString() +'-производной по y в точке равно '+funkr_y.eval({x:dot_value,y:dot_value2})+'\n'
+		}   
+	}
+ }
+}
+
+function solve_integral(){
+var funct=document.getElementById('func').value;
+try{
+    if (funct!=''){
+	 my_function(2,funct)
+	}
+}
+catch{
+    document.getElementById('comment').innerHTML+='К сожалению, на данном этапе данная версия не может решить данный интеграл'+'\n'
+}
+}
+
+function brush(){
+	document.getElementById('place').innerHTML=""
+}
+
+function createtask(){
+	var mode=document.getElementById('mode').options[document.getElementById('mode').selectedIndex].value;
+	var str=""
+	if (mode=="Корни полинома"){
+		var element=""
+		document.getElementById('place').innerHTML='<div id="place2"></div>'
+		element='<br>Наивысшая степень полинома <select id="selection" onchange="values_pol()">';
+		
+		for (var i=0;i<17;i++){
+			element=element+'<option>'+i.toString()+'</option>';
+		}
+
+		element=element+'</select><br>';
+		document.getElementById('place').innerHTML+=element;	
+	}
+	
+	if (mode=="Ряд Тейлора"){
+	  var element=''
+      document.getElementById('place').innerHTML='<div id="place2"></div>'
+	  document.getElementById('place').innerHTML+='<br><input type="text" value="Функция (переменная x)" id="func"><input type="text" style="visibility:hidden" size="1px">'+
+	  '<input type="text" value="n" size="2px" id="n" >'+
+	  '<input type="text" style="visibility:hidden" size="1px"><input type="text" value="a" id="dot_a" size="2px"><input type="text" style="visibility:hidden" size="1px">'+
+	  '<br><br><textarea name="comment" cols="60" rows="20" id="comment"></textarea><div style="margin-top: 9em"><input type="button" value="Вычислить" onclick="taylor()"></div>'	
+	}
+	
+	if (mode=='Производная'){
+		document.getElementById('place').innerHTML='<br><input type="text" value="Функция" id="func"><input type="text" style="visibility:hidden" size="1px">Одной переменной (по x) <input type="text" value="n" id="por" size="2px"><input type="text" style="visibility:hidden" size="1px">Значение в точке <input type="text" value="x" size="2px" id="dot" >'+
+		'<input type="text" style="visibility:hidden" size="1px">'+
+		'<input type="button" value="Вычислить" onclick="derval(1)"><br><br><input type="text" value="Функция" id="func2"><input type="text" style="visibility:hidden" size="1px">Двух переменных (по x,y)'+
+		'<input type="text" value="n" id="por2" size="2px"><input type="text" style="visibility:hidden" size="1px">'+
+		'<input type="text" style="visibility:hidden" size="1px">Значение в точке<input type="text" value="x" id="dot2" size="2px">'+
+		'<input type="text" style="visibility:hidden" size="1px"><input type="text" value="y" id="second_dot2" size="2px"><input type="text" style="visibility:hidden" size="1px">'+
+		'<input type="button" value="Вычислить" onclick="derval(2)">'	
+		document.getElementById('place').innerHTML=document.getElementById('place').innerHTML+'<br><br><textarea name="comment" cols="60" rows="20" id="comment"></textarea>'
+ }
+ 
+	if (mode=='Неопределенный интеграл'){
+		document.getElementById('place').innerHTML='<br><input type="text" value="Функция" id="func" size="6px">dx<input type="text" style="visibility:hidden" size="1px"><input type="text" name="dot" value="Верхний предел" id="upper">'+
+		'<input type="text" style="visibility:hidden" size="1px"><input type="text" name="dot" value="Нижний предел" id="lower">'+
+		'<input type="text" style="visibility:hidden" size="1px">'+
+		'<input type="button" value="Вычислить" onclick="solve_integral()">'
+		document.getElementById('place').innerHTML=document.getElementById('place').innerHTML+'<br><br><textarea name="comment" cols="60" rows="20" id="comment"></textarea>'
+	}
+}
+
+
+</script>
+</head>
+<body>
+Режим работы <select id="mode">
+<option>Корни полинома</option>
+<option>Ряд Тейлора</option>
+<option>Производная</option>
+<option>Неопределенный интеграл</option>
+</select>
+<input type="text" style="visibility:hidden" size="1px">
+<br><br><input type="button" id="create_task" value="Создать задачу" onclick="createtask()"><br><br>
+<div id="place"></div>
+</body>
+</html>
